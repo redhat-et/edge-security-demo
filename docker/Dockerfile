@@ -48,6 +48,8 @@ wget \
 keylime \
 which"
 
+RUN dnf -y update -v 
+
 RUN dnf makecache && \
   dnf -y install $PKGS_DEPS && \
   dnf clean all && \
@@ -76,6 +78,8 @@ RUN make && \
   install -c tpm_server /usr/local/bin/tpm_server
 
 VOLUME [ "/sys/fs/cgroup" ]
+
+RUN cd && git clone https://github.com/keylime/keylime
 
 ENTRYPOINT ["/lib/systemd/systemd"]
 
