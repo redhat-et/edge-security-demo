@@ -2,7 +2,7 @@
 # Dockerfile for Edge / AI Security Demo
 ##############################################################################
 
-FROM fedora:31
+FROM fedora:latest
 MAINTAINER Luke Hinds <lhinds@redhat.com>
 LABEL version="0.1" description="Dockerfile for Edge / AI Security Demo"
 
