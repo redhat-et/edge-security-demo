@@ -3,7 +3,7 @@
 This repository contains the files and documentation to perform the joint Edge /
 AI, Security demo developed within OCTO, Emerging Technologies.
 
-The demo consists of a Edge / AI based application. The application streams
+The demo consists of an Edge / AI based application. The application streams
 video content that is processed by tensorflow monitored with the streams
 rendered onto a master media machine over HTTP.  
 
