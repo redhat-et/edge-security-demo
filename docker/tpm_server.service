@@ -1,0 +1,6 @@
+[Unit]
+Description=TPM Server
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/tpm_server -rm
