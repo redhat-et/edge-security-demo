@@ -1,13 +1,24 @@
 # Edge, AI & Security Demo
 
-This repository contains the files needed to create a demonstration of an
-OpenShift Cluster running an AI / Edge workload, protected by Keylime.
+This repository contains the files and documentation to perform the joint Edge /
+AI, Security demo developed within OCTO, Emerging Technologies.
 
-To create the container images, use the following command line syntax:
+The demo consists of a Edge / AI based application. The application streams
+video content that is processed by tensorflow monitored with the streams
+rendered onto a master media machine over HTTP.  
 
-```
-docker build -t et-demo .  
-container_id=$(mktemp)
-docker run --detach --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro et-demo > ${container_id}
-docker exec -u 0 -it --tty "$(cat ${container_id})" /bin/bash    
-```
+Each streaming application will be run in an OpenShift pod.
+
+Two OpenShift nodes (virtual machine based) will be present to run the Edge AI
+pod. Keylime will monitor both OpenShit nodes and all containers running in the
+pod.
+
+One of the Nodes will be compromised / hacked. When this happens, Keylime will
+sense the breach. It will then inform the controller to migrate the pod to the
+second node and will have all containers perform actions to blacklist the
+compromised node.
+
+The user will experience this as the video feeds continuing service while the
+pod migrates to a non compromised environment.
+
+![](images/arch.png)
