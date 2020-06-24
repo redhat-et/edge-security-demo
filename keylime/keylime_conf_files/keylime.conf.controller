@@ -17,7 +17,7 @@ ca_implementation = openssl
 [cloud_agent]
 #=============================================================================
 
-# The Agent's IP address and port used to communicate with other services 
+# The Agent's IP address and port used to communicate with other services
 # as well as a bind address for the agent server.
 cloudagent_ip = 127.0.0.1
 cloudagent_port = 9002
@@ -54,7 +54,7 @@ extract_payload_zip = True
 # If you set this to 'generate', keylime will create a random uuid
 # If you set this to 'hash_ek', keylime will set the UUID to the result
 # of SHA256(public EK in PEM format)
-agent_uuid = D432FBB3-D2F1-4A97-9EF7-75BD81C00000
+agent_uuid = generate
 
 # Whether to listen for revocation notifications from the verifier
 listen_notfications = True
@@ -342,7 +342,7 @@ ek_check_script=
 [registrar]
 #=============================================================================
 
-# The registrar's IP address and port used to communicate with other 
+# The registrar's IP address and port used to communicate with other
 # services as well as a bind address for the registrar server.
 registrar_ip = 127.0.0.1
 registrar_port = 8890
@@ -451,7 +451,7 @@ cert_bits=2048
 # You can then use keylime_ca -c listen -n ca/RevocationNotifier-cert.crt
 cert_crl_dist=http://localhost:38080/crl
 
-# If the provider for certificate generation is CFSSL, then the HTTP-based 
+# If the provider for certificate generation is CFSSL, then the HTTP-based
 # API server will run at this address and port.
 cfssl_ip = 127.0.0.1
 cfssl_port = 8888
