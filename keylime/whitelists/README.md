@@ -1,7 +1,7 @@
 # Keylime Whitelist Files
 
-This folder contains the whitelists needed for each machine to be provisioned
-on machine running the keylime agent.
+This folder contains the whitelists needed for each agent running machine
+to be provisioned
 
 To create a whitelist, run this on the target machine:
 
