@@ -2,7 +2,7 @@
 # Dockerfile for Edge / AI Security Demo
 ##############################################################################
 
-FROM fedora:latest
+FROM fedora:31
 MAINTAINER Luke Hinds <lhinds@redhat.com>
 LABEL version="0.1" description="Dockerfile for Edge / AI Security Demo"
 
@@ -48,7 +48,7 @@ wget \
 keylime \
 which"
 
-RUN dnf -y update -v 
+RUN dnf -y update -v
 
 RUN dnf makecache && \
   dnf -y install $PKGS_DEPS && \
@@ -79,7 +79,19 @@ RUN make && \
 
 VOLUME [ "/sys/fs/cgroup" ]
 
-RUN cd && git clone https://github.com/keylime/keylime
+# install keylime and have systemd run it at startup
+# have systemd start tpm_server, tpm2-abrmd and keyline-agent
+ADD tpm_server.service /etc/systemd/system/
+RUN chmod 644 /etc/systemd/system/tpm_server.service
+ADD keylime_agent.service /etc/systemd/system/
+RUN chmod 644 /etc/systemd/system/keylime_agent.service
+ADD tpm2-abrmd.service /etc/systemd/system/
+RUN chmod 644 /etc/systemd/system/tpm2-abrmd.service
+
+# configure tpm2-abrmd
+ENV TPM2TOOLS_TCTI "tabrmd:bus_name=com.intel.tss2.Tabrmd"
+
+RUN systemctl enable tpm_server tpm2-abrmd keylime_agent
 
 ENTRYPOINT ["/lib/systemd/systemd"]
 

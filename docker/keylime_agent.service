@@ -1,0 +1,9 @@
+[Unit]
+Description=The Keylime compute agent
+Requires=tpm2-abrmd.service
+
+[Service]
+ExecStart=/usr/bin/keylime_agent
+
+[Install]
+WantedBy=default.target
