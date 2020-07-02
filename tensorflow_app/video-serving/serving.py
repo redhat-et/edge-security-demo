@@ -3,7 +3,7 @@ from flask import Flask
 from flask import render_template
 from flask import send_from_directory
 
-
+#Basic Flask app to server an HLS playlist file to user
 app = Flask(__name__,template_folder='templates')
 
 
