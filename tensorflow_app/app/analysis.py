@@ -44,8 +44,11 @@ import cv2
 import requests
 from io import BytesIO
 
+#This will need to be imported from an envionment variable 
 tf_url = "http://localhost:8050/v1/models/default:predict"
+DEBUG = False 
 
+# Tensorflow Model ZOO inference Libraries 
 def get_category_index(label_path):
   """ Transforms label map into category index for visualization.
 
@@ -61,7 +64,8 @@ def get_category_index(label_path):
   category_index = label_map_util.create_category_index(categories)
   return category_index
 
-def run_inference_for_batch_of_images(tf_url, images,i):
+#Function Acceps a batch of images
+def run_inference_for_batch_of_images(tf_url, images):
     """ Takes in batch of video frames to send to TFServing Container
 
         Args:
@@ -75,30 +79,27 @@ def run_inference_for_batch_of_images(tf_url, images,i):
     for image in images:
         raw_numpy.append(np.array(image))
     
-    #json_object = json.loads("hi")
+    #Convert list of images to np.array's of images
     payload = {"instances": [np.array(image).tolist() for image in images]}
-    #data = json.dumps({"instances": instance})
-    #data = json.dumps(json_object)
-    #print(data)
+    
     print("Number of Images in Batch: " + str(len(images)))
-    #Send frame to Tensorflow Serving for inference
+    #Send batc to Tensorflow Serving for inference
     print("POSTing image to " + tf_url + " Awaiting response...")
-
-
-    #json_response = requests.post(ts_url, data=data)
     json_response = requests.post(tf_url, json=payload)
     print(json_response)
     print("Response received.")
 
-    # Write output to a .txt file
-    output_file = "output.txt"
-    with open(output_file, "w") as out:
-        out.write(json_response.text)
+    # Write output to a .txt file DEBUGGING 
+    if DEBUG:
+        output_file = "output.txt"
+        with open(output_file, "w") as out:
+            out.write(json_response.text)
 
     # Extracts the inference results
     output_dict = json.loads(json_response.text)
     output_dict = output_dict["predictions"]
     
+    #Loops through the results and extracts necessary data for bounding box drawing 
     out_dictionaries = []
     for num, image_dict in enumerate(output_dict): 
         tmp_dict = {}
@@ -120,14 +121,15 @@ def run_inference_for_batch_of_images(tf_url, images,i):
             detection_masks_reframed = tf.cast(detection_masks_reframed > 0.3,
                                                 tf.uint8)
             output_dict['detection_masks_reframed'] = detection_masks_reframed.numpy()
-        # Visualizes inferred image
-        #return show_inference(f.getvalue(), response,i)
+    # Visualizes inferred image
     return show_inference(raw_numpy, out_dictionaries,i)
 
   
 
 #Overlays the results from image analysis onto frame
-def show_inference(input_images, output_dict, i):
+#Accepts the output dictionary from tensorflow serving 
+#Returns an array of inferenced images in np.array format
+def show_inference(input_images, output_dict):
     """ Decodes JSON data and converts it to a bounding box overlay
             on the input image, then saves the image to a directory.
 
@@ -189,37 +191,38 @@ def generate():
     ret, tempframe = cap.read()
     if ret == True: 
       #Run inference on video Frame    
-      #Cut down framerate to X fps 
+      #Add add every other frame to inference batch for speed up)
         if(i != 0 and i%2 == 0):
             batch.append(tempframe)
-        
+        #Every 5 Frames Send batch to TF_serving container 
         if (i%10 == 0 and i != 0):
-            #Every 3 seconds Send Chunk of video
+            
+        ``  #Considering a Video with 30fps make 3 second clip with at 15fps
             if(i == 90):
+                #close cuttently open video writer saving file 
                 video_writer.close()
+                #Re-Zero frame count
                 i=0
-                #Upload video Chunk(.mkv) to Ceph at the Specified bucket 
-                #TOGGLE FOR UPLOADING SEGMENTS TO CEPH
                 j = j+1
-                #video_writer = cv2.VideoWriter('app/segments/video-%d.mkv'%j,fourcc,3.0,(int(width),int(height))  )
-                video_writer = imageio.get_writer('segments/video-%d.mp4'%j,fps=3)
+                #open next segment and save in local directory 
+                ##TODO how to send these segments to main video server 
+                video_writer = imageio.get_writer('segments/video-%d.mp4'%j,fps=15)
                 #(flag, encodedImage) = cv2.imencode(".jpg", out_frame)
+           
+            #Otherwise send frames for inference and append them to the current video segment 
             else:
-                #out_frame = run_inference_for_single_image(tf_url, tempframe,i)
                 out_batch = run_inference_for_batch_of_images(tf_url,batch,i)
                 for image in out_batch:
                     #Convert to RGB imagespace since that's what imageio expects
                     im_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
                     video_writer.append_data(im_bgr)
                 batch = []
-
+                
                 i = i + 1
         else:
+            #Be sure to always increment frame number
             i = i + 1
             continue
-      
-    if cv2.waitKey(25) & 0xFF == ord('q'):
-        break
   #Clear variables before closing module 
   j = 0
   i = 0

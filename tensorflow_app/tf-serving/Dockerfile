@@ -10,6 +10,7 @@ RUN apt-get install -qy wget
 
 # Create variable. Use it with docker build --build-arg model_url=...
 # For this demo I use http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz
+# you can use any model from the tensorflow model ZOO https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 ARG model_url
 
 # Download model

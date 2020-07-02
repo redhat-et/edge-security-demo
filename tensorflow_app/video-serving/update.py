@@ -7,7 +7,7 @@ import sys
 import time
 import threading
 
-
+##Ceph Credentials 
 s3_endpoint_url = os.environ['CEPH_ENDPOINT']
 s3_access_key_id = os.environ['S3_ID']
 s3_secret_access_key = os.environ['S3_SECRET_KEY']
@@ -40,6 +40,7 @@ def build_video(currSeg):
     ffmpeg_log = open('segments/ffmpeg_log.txt', 'w')
     print(my_bucket.objects.all())
     
+
     for my_bucket_object in my_bucket.objects.all():
         
         print("Getting Segment from Ceph: ",my_bucket_object.key)
@@ -47,6 +48,7 @@ def build_video(currSeg):
         num = filename.split("-")
         currNum = int(num[1].split(".")[0])
         
+        #Download only new segments from ceph while still leaving older segments for serving by other containers 
         if currNum > currSeg:
             s3.download_file(s3_bucket,my_bucket_object.key,"segments/"+my_bucket_object.key)
             os.system("ffmpeg -i segments/"+my_bucket_object.key+" -s 640x360 -hls_flags delete_segments+append_list+omit_endlist -hls_list_size 30 -f hls segments/out.m3u8")
