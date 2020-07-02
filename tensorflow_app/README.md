@@ -2,7 +2,7 @@
 
 To conplete video streaming and analytics three containers are used. 
 
-1. A `Tensorflow Serving` container which accepts war batches of video frames in bitstring format and returns dictionaries of usful detections 
+1. A `Tensorflow Serving` container which accepts war batches of video frames in bitstring format and returns dictionaries of useful detections 
 
     - See Dockerfile in `video-serving` directory for more info 
     - The container is already made in my Quay repo -> (Still need to Upload)
