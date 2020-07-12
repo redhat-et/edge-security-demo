@@ -1,6 +1,6 @@
 # Cloud Native Video Sreaming and Analytics
 
-To conplete video streaming and analytics three containers are used. 
+To complete video streaming and analytics three containers are used. 
 
 1. A `Tensorflow Serving` container which accepts war batches of video frames in bitstring format and returns dictionaries of useful detections 
 

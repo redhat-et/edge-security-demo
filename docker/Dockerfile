@@ -80,7 +80,7 @@ RUN make && \
 VOLUME [ "/sys/fs/cgroup" ]
 
 # install keylime and have systemd run it at startup
-# have systemd start tpm_server, tpm2-abrmd and keyline-agent
+# have systemd start tpm_server, tpm2-abrmd and keylime-agent
 ADD tpm_server.service /etc/systemd/system/
 RUN chmod 644 /etc/systemd/system/tpm_server.service
 ADD keylime_agent.service /etc/systemd/system/
