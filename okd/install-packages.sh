@@ -6,9 +6,8 @@ rpm-ostree cleanup -m
 rpm-ostree upgrade
 
 # Updating base packages
-# `rpm-ostree install ...` adds packages that are not a part of the original OSTree as "LayeredPackages"
-# `rpm-ostree override replace ...` is used to update the base layer packages to a newer version using locally downloaded RPMs
-# Few of the packages that we need to install have requirements of newer verisons of base packages, so we need to manually download them.
+# Few of the packages that we need to install have requirements of newer verisons of base packages, rpm-ostree isn't like a normal package manager and can't update already installed packages that are in the base layer.
+# So we need to manually download the RPMs and `rpm-ostree override replace` them before we can `rpm-ostree install` the desired packages.
 # Example: dbus-devel requires dbus-libs-1.12.20-1 instead of dbus-libs-1.12.18-1 which is a base package on FCOS
 
 curl -L -O http://download-node-02.eng.bos.redhat.com/fedora/linux/updates/32/Everything/x86_64/Packages/d/dbus-libs-1.12.20-1.fc32.x86_64.rpm
@@ -22,6 +21,7 @@ curl -L -O http://download-node-02.eng.bos.redhat.com/fedora/linux/updates/32/Ev
 rpm-ostree override replace ./dbus-libs-1.12.20-1.fc32.x86_64.rpm ./glib2-2.64.3-2.fc32.x86_64.rpm ./pcre2-syntax-10.35-3.fc32.noarch.rpm ./pcre2-10.35-3.fc32.x86_64.rpm
 
 # Installing packages
+# `rpm-ostree install ...` adds packages that are not a part of the original OSTree as "LayeredPackages"
 
 rpm-ostree install automake \
 dbus-devel \
