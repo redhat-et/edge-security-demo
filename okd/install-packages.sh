@@ -1,10 +1,15 @@
 #!/bin/bash
 #Script to install all packages to run the Keylime agent
 
+#To clear cached RPM repository metadata and perform a system upgrade
 rpm-ostree cleanup -m
 rpm-ostree upgrade
 
 # Updating base packages
+# `rpm-ostree install ...` adds packages that are not a part of the original OSTree as "LayeredPackages"
+# `rpm-ostree override replace ...` is used to update the base layer packages to a newer version using locally downloaded RPMs
+# Few of the packages that we need to install have requirements of newer verisons of base packages, so we need to manually download them.
+# Example: dbus-devel requires dbus-libs-1.12.20-1 instead of dbus-libs-1.12.18-1 which is a base package on FCOS
 
 curl -L -O http://download-node-02.eng.bos.redhat.com/fedora/linux/updates/32/Everything/x86_64/Packages/d/dbus-libs-1.12.20-1.fc32.x86_64.rpm
 
@@ -18,9 +23,7 @@ rpm-ostree override replace ./dbus-libs-1.12.20-1.fc32.x86_64.rpm ./glib2-2.64.3
 
 # Installing packages
 
-rpm-ostree install automake \
-dbus-devel \
-dnf-plugins-core \
+rpm-ostree install dbus-devel \
 gcc \
 git \
 glib2-devel \
