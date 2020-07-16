@@ -23,7 +23,8 @@ rpm-ostree override replace ./dbus-libs-1.12.20-1.fc32.x86_64.rpm ./glib2-2.64.3
 
 # Installing packages
 
-rpm-ostree install dbus-devel \
+rpm-ostree install automake \
+dbus-devel \
 gcc \
 git \
 glib2-devel \
