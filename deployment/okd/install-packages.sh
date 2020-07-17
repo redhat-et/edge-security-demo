@@ -6,7 +6,8 @@ rpm-ostree cleanup -m
 rpm-ostree upgrade
 
 # Updating base packages
-# Few of the packages that we need to install have requirements of newer verisons of base packages, rpm-ostree isn't like a normal package manager and can't update already installed packages that are in the base layer.
+# Few of the packages that we need to install have requirements of newer verisons of base packages
+# rpm-ostree isn't like a normal package manager and can't update already installed packages that are in the base layer.
 # So we need to manually download the RPMs and `rpm-ostree override replace` them before we can `rpm-ostree install` the desired packages.
 # Example: dbus-devel requires dbus-libs-1.12.20-1 instead of dbus-libs-1.12.18-1 which is a base package on FCOS
 
