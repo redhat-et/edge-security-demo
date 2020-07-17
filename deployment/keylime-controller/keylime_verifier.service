@@ -1,0 +1,11 @@
+[Unit]
+Description=The Keylime Verifier server
+
+[Service]
+ExecStart=/usr/local/bin/keylime_verifier
+Environment=PYTHONPATH=/home/fedora/keylime
+StandardOutput=append:/var/log/keylime_verifier.log
+StandardError=append:/var/log/keylime_verifier.log
+
+[Install]
+WantedBy=default.target

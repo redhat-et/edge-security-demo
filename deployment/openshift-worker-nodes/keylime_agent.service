@@ -1,0 +1,12 @@
+[Unit]
+Description=The Keylime compute agent
+
+[Service]
+ExecStart=/var/home/core/keylime/keylime/cmd/agent.py
+Environment=TPM2TOOLS_TCTI="tabrmd:bus_name=com.intel.tss2.Tabrmd"
+Environment=PYTHONPATH=/var/home/core/keylime
+StandardOutput=append:/var/log/keylime_agent.log
+StandardError=append:/var/log/keylime_agent.log
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=TPM Server
+
+[Service]
+Type=simple
+WorkingDirectory=/tmp/
+ExecStart=/etc/bin/tpm_server -rm
+
+[Install]
+WantedBy=multi-user.target
+

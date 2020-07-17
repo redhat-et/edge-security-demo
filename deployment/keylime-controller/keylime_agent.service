@@ -1,0 +1,13 @@
+[Unit]
+Description=The Keylime compute agent
+Requires=tpm2-abrmd.service
+
+[Service]
+ExecStart=/usr/bin/keylime_agent
+Environment=TPM2TOOLS_TCTI="tabrmd:bus_name=com.intel.tss2.Tabrmd"
+Environment=PYTHONPATH=/home/fedora/keylime
+StandardOutput=append:/var/log/keylime_agent.log
+StandardError=append:/var/log/keylime_agent.log
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=The Keylime Registrar server
+
+[Service]
+ExecStart=/usr/local/bin/keylime_registrar
+Environment=PYTHONPATH=/home/fedora/keylime
+StandardOutput=append:/var/log/keylime_registrar.log
+StandardError=append:/var/log/keylime_registrar.log
+
+[Install]
+WantedBy=default.target
