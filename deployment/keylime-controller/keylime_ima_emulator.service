@@ -1,13 +1,13 @@
 [Unit]
-Description=The Keylime compute agent
+Description=The Keylime IMA emulator
 Requires=tpm2-abrmd.service
 
 [Service]
-ExecStart=/usr/local/bin/keylime_agent
+ExecStart=/usr/local/bin/keylime_ima_emulator
 Environment=TPM2TOOLS_TCTI="tabrmd:bus_name=com.intel.tss2.Tabrmd"
 Environment=PYTHONPATH=/home/fedora/keylime
-StandardOutput=append:/var/log/keylime_agent.log
-StandardError=append:/var/log/keylime_agent.log
+StandardOutput=append:/var/log/keylime_ima_emulator.log
+StandardError=append:/var/log/keylime_ima_emulator.log
 
 [Install]
 WantedBy=multi-user.target

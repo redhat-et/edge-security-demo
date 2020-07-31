@@ -1,0 +1,12 @@
+[Unit]
+Description=The Keylime IMA emulator
+Requires=tpm2-abrmd.service
+
+[Service]
+ExecStart=/usr/bin/keylime_ima_emulator
+Environment=TPM2TOOLS_TCTI="tabrmd:bus_name=com.intel.tss2.Tabrmd"
+StandardOutput=append:/var/log/keylime_ima_emulator.log
+StandardError=append:/var/log/keylime_ima_emulator.log
+
+[Install]
+WantedBy=multi-user.target

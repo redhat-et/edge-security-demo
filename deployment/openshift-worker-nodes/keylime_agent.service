@@ -9,4 +9,4 @@ StandardOutput=append:/var/log/keylime_agent.log
 StandardError=append:/var/log/keylime_agent.log
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
