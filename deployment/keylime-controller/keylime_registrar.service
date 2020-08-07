@@ -8,4 +8,4 @@ StandardOutput=append:/var/log/keylime_registrar.log
 StandardError=append:/var/log/keylime_registrar.log
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

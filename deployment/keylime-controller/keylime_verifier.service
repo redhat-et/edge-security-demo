@@ -8,4 +8,4 @@ StandardOutput=append:/var/log/keylime_verifier.log
 StandardError=append:/var/log/keylime_verifier.log
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
