@@ -170,9 +170,6 @@ def generate():
     i = 0
     #Segment count
     j = 0
-    ##Video writed to make MKV segments from Individual analyzed frames 
-    video_writer = imageio.get_writer('segments/video-%d.mp4'%j,fps=3)
-    #video_writer = cv2.VideoWriter('app/segments/video-%d.mkv'%j,fourcc,3.0,(int(width),int(height))  )
 
     #While incoming video is received from IoT Device Simulator
     batch = []
@@ -188,15 +185,11 @@ def generate():
             #Every 5 Frames Send batch to TF_serving container 
             if (i%10 == 0 and i != 0):
 
-                #Considering a Video with 30fps make 3 second clip with at 15fps
+                #Considering a Video with 30fps make 3 second clip with at 90fps
                 if(i == 90):
-                    #close cuttently open video writer saving file 
-                    video_writer.close()
                     #Re-Zero frame count
                     i=0
                     j = j+1
-                    #open next segment and save in local directory 
-                    video_writer = imageio.get_writer('segments/video-%d.mp4'%j,fps=15)
 
                 #Otherwise send frames for inference and append them to the current video segment 
                 else:
@@ -213,11 +206,10 @@ def generate():
     #Clear variables before closing module 
     j = 0
     i = 0
-    video_writer.close() 
-    video_digest.kill()
 
 def send_to_videoserver(images):
 	payload = {"instances": [np.array(image).tolist() for image in images]}
+    # TODO Change to streaming service's IP
 	response = requests.post("http://0.0.0.0:8080/video_stream", json=payload)
 	return response
 

@@ -1,6 +1,5 @@
 from flask import Flask, Response, request
 from flask import render_template, send_file
-import threading
 import argparse
 import datetime
 import imutils
@@ -11,50 +10,46 @@ import numpy as np
 from PIL import Image
 from flask import jsonify
 import time
-
-
-outputFrame = None 
-lock = threading.Lock()
+from collections import deque
 
 app = Flask(__name__, template_folder='templates')
+
+#Queue implemented for consistent FPS
+q=deque(maxlen=5)
 
 @app.route("/")
 def index():
 	return render_template('index.html')
 
-def stream_to_memory():
-	global outputFrame, lock	
-	list1 = request.json['instances']
-	for l in list1:
-		img=np.asarray(l, dtype=np.uint32)
-		outputFrame = Image.fromarray(img.astype('uint8'))
-
+# TODO Use a Kafka queue which can help us to decouple the two applications 
+# (analysis and streaming) and provide a more scalable approach.
+def stream_to_queue():
+	list = request.json['instances']
+	for l in list:
+		a = np.asarray(l, dtype=np.uint32)
+		b = Image.fromarray(a.astype('uint8')) 
+		c = np.asarray(b)
+		(flag, image) = cv2.imencode(".JPEG", c)
+		q.append(image)
 
 @app.route("/video")
 def video():
-	def produce_frame(): 
-		global outputFrame, lock 
-		
-		while True: 
-			if outputFrame is None: 
+	def produce_frame():
+		while True:
+			if len(q) is 0:
 				continue
 			
-			image1 = np.asarray(outputFrame)
-			(flag, image) = cv2.imencode(".JPEG", image1)
-
-			if not flag:
-				continue
-			
+			outputFrame = q.popleft()
 			yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
-				bytearray(image) + b'\r\n')
-			time.sleep(1.0)
+				bytearray(outputFrame) + b'\r\n')
+			time.sleep(0.5)
 
 	return Response(produce_frame(), mimetype = "multipart/x-mixed-replace; boundary=frame")
 			
 				
 @app.route("/video_stream", methods=['POST'])
 def video_stream():
-	stream_to_memory()
+	stream_to_queue()
 	return 'OK'
 	
 if __name__ == "__main__":

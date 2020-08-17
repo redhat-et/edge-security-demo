@@ -48,9 +48,8 @@ RUN ffmpeg -version
 COPY . ./ 
 
 RUN chmod 777 analysis.py
-RUN chmod 777 startScript.sh
+RUN chmod 777 entrypoint.sh
 
 EXPOSE 8050
-EXPOSE 8051
 
-ENTRYPOINT ["/bin/bash","startScript.sh"]
+ENTRYPOINT ["/bin/bash","entrypoint.sh"]
