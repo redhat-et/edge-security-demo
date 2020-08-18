@@ -29,7 +29,6 @@ RUN pip install pillow
 RUN dnf -y install protobuf-compiler python-lxml make
 
 RUN git clone https://github.com/cocodataset/cocoapi.git
-RUN ls
 RUN dnf -y install gcc python3-devel
 
 RUN cd cocoapi/PythonAPI && make && cp -r pycocotools ../../models/research/
@@ -52,4 +51,4 @@ RUN chmod 777 entrypoint.sh
 
 EXPOSE 8050
 
-ENTRYPOINT ["/bin/bash","entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","analysis.py"]

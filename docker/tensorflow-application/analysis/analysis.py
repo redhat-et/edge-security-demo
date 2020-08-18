@@ -1,15 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-## If we just use Tensorflow 2.x we git "Config" error
-#try:
-#  import tensorflow.compat.v2 as tf
-#except Exception:
-#  pass
-
-##tf.enable_v2_behavior()
-
-#print(tf.__version__)
-
 import pathlib
 import numpy as np
 import os

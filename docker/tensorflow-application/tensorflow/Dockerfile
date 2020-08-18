@@ -1,3 +1,6 @@
+# Run with: 
+# docker build -t <container Name> --build-arg model_url=http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz .
+
 FROM tensorflow/serving
 
 # Define metadata
@@ -23,6 +26,3 @@ RUN find -name saved_model -exec mv {}/saved_model.pb {}/variables object-detect
 EXPOSE 8050
 ENTRYPOINT ["tensorflow_model_server", "--model_base_path=/models/object-detect"]
 CMD ["--rest_api_port=8050","--port=8051"]
-
-#Run with: 
-# Docker build -t <container Name> --build-arg model_url=http://download.tensorflow.org/models/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09.tar.gz .
