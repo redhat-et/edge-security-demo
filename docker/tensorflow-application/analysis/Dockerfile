@@ -47,7 +47,6 @@ RUN ffmpeg -version
 COPY . ./ 
 
 RUN chmod 777 analysis.py
-RUN chmod 777 entrypoint.sh
 
 EXPOSE 8050
 
